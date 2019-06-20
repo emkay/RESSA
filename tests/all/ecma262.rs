@@ -1,7 +1,6 @@
 #![cfg(test)]
 use super::{get_js_file, EverythingVersion, Lib};
 use env_logger;
-use resast::ProgramPart;
 use ressa::{Builder, Parser};
 
 #[test]
@@ -10,13 +9,16 @@ fn es5() {
     info!("ES5");
     let path = Lib::Everything(EverythingVersion::Es5).path();
     let js = get_js_file(&path).expect(&format!("Faield to get {:?}", path));
-    let _res: Vec<_> = Parser::new(&js)
+    for (i, (lhs, rhs)) in Parser::new(&js)
         .expect("Failed to create parser")
         .map(|i| match i {
             Ok(i) => i,
             Err(e) => panic!("Error parsing {:?}\n{}", path, e),
         })
-        .collect();
+        .zip(super::es5::ES5.iter())
+        .enumerate() {
+        assert_eq!((i, &lhs), (i, rhs));
+    }
 }
 
 #[test]
@@ -78,3 +80,4 @@ fn es2015_module() {
             .collect();
     }
 }
+

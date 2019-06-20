@@ -11,8 +11,11 @@ extern crate ress;
 extern crate ressa;
 #[cfg(feature = "moz_central")]
 extern crate tar;
+#[macro_use]
+extern crate lazy_static;
 
 mod ecma262;
+mod es5;
 mod major_libs;
 mod snippets;
 #[cfg(feature = "moz_central")]
